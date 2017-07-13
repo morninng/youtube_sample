@@ -35,7 +35,7 @@
         // 'scope' field specifies space-delimited list of access scopes
 
         gapi.client.init({
-            'clientId': 'REPLACE_ME',
+            'clientId': '46563705700-pjadn4rbpviho1411tvpeoe23nljpce1.apps.googleusercontent.com',
             'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'],
             'scope': 'https://www.googleapis.com/auth/youtube.force-ssl https://www.googleapis.com/auth/youtubepartner'
         }).then(function () {
@@ -278,6 +278,7 @@
             this.sendFile_();
         } else {
             this.onUploadError_(e);
+            console.log(e);
         }
         }.bind(this);
         xhr.onerror = this.onUploadError_.bind(this);
@@ -372,6 +373,7 @@
     MediaUploader.prototype.onContentUploadError_ = function(e) {
         if (e.target.status && e.target.status < 500) {
         this.onError(e.target.response);
+        console.log(e.target.response);
         } else {
         this.retryHandler.retry(this.resume_.bind(this));
         }
@@ -436,13 +438,13 @@
         });
         var token = getAccessToken();
         if (!token) {
-        alert("You need to authorize the request to proceed.");
-        return;
+            alert("You need to authorize the request to proceed.");
+            return;
         }
 
         if (!selectedFile) {
-        alert("You need to select a file to proceed.");
-        return;
+            alert("You need to select a file to proceed.");
+            return;
         }
         var params = {'part': 'snippet,status'};
 
@@ -457,18 +459,20 @@
             try {
                 var errorResponse = JSON.parse(data);
                 message = errorResponse.error.message;
+                console.log(message);
             } finally {
                 alert(message);
             }
             }.bind(this),
-            onProgress: function(data) {
-            var currentTime = Date.now();
-            console.log('Progress: ' + data.loaded + ' bytes loaded out of ' + data.total);
-            var totalBytes = data.total;
+                onProgress: function(data) {
+                var currentTime = Date.now();
+                console.log('Progress: ' + data.loaded + ' bytes loaded out of ' + data.total);
+                var totalBytes = data.total;
             }.bind(this),
-            onComplete: function(data) {
-            var uploadResponse = JSON.parse(data);
-            console.log('Upload complete for video ' + uploadResponse.id);
+                onComplete: function(data) {
+                var uploadResponse = JSON.parse(data);
+                console.log(uploadResponse);
+                console.log('Upload complete for video ' + uploadResponse.id);
             }.bind(this)
         });
 
